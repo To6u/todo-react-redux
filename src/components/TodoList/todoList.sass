@@ -1,0 +1,66 @@
+.todo-list
+  .spinner-border
+    left: -36px
+    top: 3px
+
+  .tasks-container
+    max-height: 87vh
+    overflow: scroll
+    padding: 10px 10px 0
+    -ms-overflow-style: none
+    box-shadow: inset 0 0 4px #cccccc6b
+    border-radius: 7px
+    
+    &::-webkit-scrollbar
+      width: 0
+
+.todo-finish-list
+  .spinner-border
+    left: -36px
+    top: 46px
+
+
+.tasks-list-header
+  display: flex
+  justify-content: space-between
+  align-items: center
+  padding: 0 10px 0
+
+.todo-item-exit-active 
+  animation: todo-list .4s ease forwards
+
+.todo-item-enter-active
+  animation: todo-list .3s ease-in alternate-reverse
+
+.appear-todo-item-enter-active
+
+.no-task-exit-active
+  animation: no-task .1s ease forwards
+
+.no-task-enter-active  
+  animation: no-task .2s ease alternate-reverse
+  
+@keyframes todo-list
+  0%
+    transform: translateX(0)
+
+  30%
+    opacity: .7
+    transform: translateX(30px)
+    
+  100%
+    opacity: 0
+    transform: translateX(-200px)
+
+@keyframes no-task
+  0%
+    opacity: 1
+    transform: translateY(0)
+
+  30%
+    opacity: .4
+    transform: translateY(-4px)
+    
+  100%
+    opacity: 0
+    transform: translateY(-10px)
