@@ -1,3 +1,5 @@
+Web application for creating a task list. This project is not commercial, made in order to practice with React & Redux. For styles Bootstrap 4 was used.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
