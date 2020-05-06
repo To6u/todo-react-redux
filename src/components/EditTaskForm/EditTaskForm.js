@@ -4,7 +4,6 @@ import { Input } from '../Input/Input'
 import {editTodo, toggleEditForm} from '../../redux/actions'
 import Alert from '../Alert/Alert'
 import { Textarea } from '../Textarea/Textarea'
-import {CSSTransition, TransitionGroup} from 'react-transition-group'
 import './editTaskForm.sass'
 
 export const EditTaskForm = ({props}) => {
@@ -22,7 +21,7 @@ export const EditTaskForm = ({props}) => {
     const changedTask = {...props, title: newTitle, text: newText, edit: false, dateModified}
     dispatch(editTodo(changedTask))
   }
-  
+
   const closeHandler = e => {
     e.preventDefault()
     const changedTask = todoList.map((e, i) => {

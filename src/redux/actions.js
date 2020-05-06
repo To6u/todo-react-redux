@@ -1,10 +1,9 @@
 import axios from 'axios'
-import { SHOW_LOADER_TODO_LIST, HIDE_LOADER_TODO_LIST, 
+import { SHOW_LOADER_TODO_LIST, HIDE_LOADER_TODO_LIST,
   SHOW_LOADER_FINISH_LIST, HIDE_LOADER_FINISH_LIST,
-  SHOW_ALERT, HIDE_ALERT, 
-  ADD_TODO, REMOVE_TODO, FETCH_TODO, TOGGLE_EDIT_FORM, ADD_FINISH_TODO, 
-  FETCH_FINISH_TODO, REMOVE_FINISH_TODO, RETURN_FINISH_TODO, UPDATE_TODO} from "./types";
-import {createStore} from 'store'
+  SHOW_ALERT, HIDE_ALERT,
+  ADD_TODO, REMOVE_TODO, FETCH_TODO, TOGGLE_EDIT_FORM, ADD_FINISH_TODO,
+  FETCH_FINISH_TODO, REMOVE_FINISH_TODO} from "./types";
 
 const url = process.env.REACT_APP_DB_URL
 
@@ -64,7 +63,6 @@ export function fetchFinishTodo() {
           dispatch({type: FETCH_FINISH_TODO, payload})
           dispatch(hideLoader(HIDE_LOADER_FINISH_LIST))
         }, 100)
-        const localStore = createStore()
       } else {
         dispatch({type: FETCH_FINISH_TODO, payload: []})
         dispatch(hideLoader(HIDE_LOADER_FINISH_LIST))
@@ -106,8 +104,8 @@ export function addTodo(task) {
     const dateOptions = {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric'}
     const dateCreate = new Date().toLocaleDateString('en-GB', dateOptions)
     const todo = {
-      title: task.title, 
-      text: task.text, 
+      title: task.title,
+      text: task.text,
       dateCreate,
       edit: false,
       dateModified: '',
@@ -180,7 +178,7 @@ export function returnFinishTodo(task) {
   return async dispatch => {
     dispatch(showLoader(SHOW_LOADER_TODO_LIST))
     try {
-      const returnTask = {...task, finish: false, dateFinish: ''} 
+      const returnTask = {...task, finish: false, dateFinish: ''}
       const res = await axios.post(`${url}/todo.json`, returnTask)
       const payload = {...returnTask, id: res.data.name}
       dispatch(removeFinishTodo(task.id))

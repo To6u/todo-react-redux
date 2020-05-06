@@ -8,7 +8,7 @@ import removeIcon from './img/trash.svg'
 import editIcon from './img/edit-3.svg'
 import returnIcon from './img/corner-up-right.svg'
 
-export default ({task, onRemoveBtn, onEditBtn, onSuccessBtn, className, onReturnBtn}) => {
+const ToDoItem = React.forwardRef (({task, onRemoveBtn, onEditBtn, onSuccessBtn, className, onReturnBtn}, ref) => {
   const cardClass = [className]
 
   const chekcBackg = {
@@ -39,7 +39,7 @@ export default ({task, onRemoveBtn, onEditBtn, onSuccessBtn, className, onReturn
       <p className="card-text"></p>
       <div className="date">
         <p className="card-date"><span>Создан:</span> {task.dateCreate}</p>
-        { task.dateModified !== '' 
+        { task.dateModified !== ''
           ? <p className="card-date"><span>Изменен:</span> {task.dateModified}</p>
           : null
         }
@@ -51,7 +51,7 @@ export default ({task, onRemoveBtn, onEditBtn, onSuccessBtn, className, onReturn
       </div>
       { !task.finish
         ? <React.Fragment>
-            <div class="task-btns btn-group-vertical" role="group" aria-label="Basic example">
+            <div className="task-btns btn-group-vertical" role="group" aria-label="Basic example">
               <input onClick={onSuccessBtn} style={chekcBackg} type="submit" value="" className="btn btn-secondary"/>
               <input onClick={onRemoveBtn} style={removeBackg} type="submit" value="" className="btn btn-secondary i-close"/>
               <input onClick={onEditBtn} style={editBackg} type="submit" value="" className="btn btn-secondary"/>
@@ -68,7 +68,7 @@ export default ({task, onRemoveBtn, onEditBtn, onSuccessBtn, className, onReturn
   )
 
   return (
-    <Card className={cardClass.join(' ')} border="light">
+    <Card ref={ref} className={cardClass.join(' ')} border="light">
       <Card.Body>
         {task.edit
           ? <EditTaskForm props={task}/>
@@ -77,4 +77,6 @@ export default ({task, onRemoveBtn, onEditBtn, onSuccessBtn, className, onReturn
       </Card.Body>
     </Card>
   )
-}
+})
+
+export default ToDoItem

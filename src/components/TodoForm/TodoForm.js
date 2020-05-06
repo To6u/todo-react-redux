@@ -17,7 +17,7 @@ const TodoForm = ({addTodo, showAlert, alert}) => {
     if (!title.trim()) {
       return showAlert('Заполните заголовок задачи')
     } else {
-      
+
     }
     const newTodo = {title: title, text: text, id: Date.now().toString()}
 

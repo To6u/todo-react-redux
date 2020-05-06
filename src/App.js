@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux'
+import {Link} from 'react-router-dom'
 import TodoList from './components/TodoList/TodoList';
 import TodoForm from './components/TodoForm/TodoForm';
 import {fetchTodo, fetchFinishTodo} from './redux/actions'
@@ -23,7 +24,9 @@ const App = () => {
 
   return (
     <div className="container pt-5">
-      <img className="github-logo" src={GitHubLogo} alt="GitHub"/>
+      <Link to="https://github.com/To6u/todo-react-redux">
+        <img className="github-logo" src={GitHubLogo} alt="GitHub"/>
+      </Link>
       <div className="row">
         <div className="col-4">
           <h3 className="mb-4 font-weight-light">Создать задачу</h3>
@@ -45,11 +48,10 @@ const App = () => {
             ? <Loader/>
             : null
           }
-          <h3 className="mb-4 font-weight-light tasks-list-header">
-            Список задач
-           {/* <FilterTask/> */}
+          <h3 className="mb-4 font-weight-light tasks-list-header px-0">Список задач
+          {/* <FilterTask/> */}
           </h3>
-            <TodoList todoList={todoListData} finish={false}/>
+          <TodoList todoList={todoListData} finish={false}/>
         </div>
       </div>
     </div>

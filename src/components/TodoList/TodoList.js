@@ -1,32 +1,36 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {connect} from 'react-redux'
 import {TransitionGroup, CSSTransition} from 'react-transition-group'
 import {sortableContainer, sortableElement} from 'react-sortable-hoc'
 import arrayMove from 'array-move'
 import ToDoItem from '../TodoItem/ToDoItem'
-import {removeTodo, toggleEditForm, addFinishTodo, 
+import {removeTodo, toggleEditForm, addFinishTodo,
   removeFinishTodo, showAlert, returnFinishTodo, updateTodo} from '../../redux/actions'
 import './todoList.sass'
 
 const TodoList = ({
-      todoList = [], visible, finish, 
-      removeTodo, toggleEditForm, addFinishTodo, 
+      todoList = [], visible, finish,
+      removeTodo, toggleEditForm, addFinishTodo,
       removeFinishTodo, showAlert, returnFinishTodo, updateTodo
   }) => {
 
-  const SortableItem = sortableElement(({value}) => (
+  const ref = React.createRef()
+
+  const SortableItem = sortableElement(({value, ref}) => (
     <CSSTransition
       classNames='todo-item'
       timeout={{enter: 300, exit: 250}}
     >
       {!value.finish
-        ? <ToDoItem 
+        ? <ToDoItem
             onSuccessBtn={() => onSuccessHandler(value.id)}
             onRemoveBtn={() => onRemoveHandler(value.id)}
             onEditBtn={() => onEditHandler(value.id)}
             task={value}
+            ref={ref}
           />
-        : <ToDoItem 
+        : <ToDoItem
+
             onRemoveBtn={() => onRemoveFinishHandler(value.id)}
             onReturnBtn={() => onReturnFinishTodo(value.id)}
             task={value}
@@ -41,19 +45,19 @@ const TodoList = ({
   })
 
   const tasks = todoList.map((task, index) =>
-    <SortableItem value={task} key={task.id} index={index}/>
+    <SortableItem value={task} ref={ref} key={task.id} index={index}/>
   )
 
   const noTask = (
-    <CSSTransition 
-      in={visible} 
-      timeout={{enter: 200, exit: 100}} 
+    <CSSTransition
+      in={visible}
+      timeout={{enter: 200, exit: 100}}
       classNames={'no-task'}
     >
       {!finish
         ? <p className='no-task text-left font-weight-light mb-1'>Любую задачу реально выполнить, если разбить ее на выполнимые части.</p>
         : <React.Fragment>
-            <p className='no-task text-left font-weight-light mb-1'> 
+            <p className='no-task text-left font-weight-light mb-1'>
             «Удовлетворённый человек решает поставленную задачу, но он не превращает задачу в проблему.»
             </p>
             <p className='no-task text-left font-weight-lighter'>Макс Люшер</p>
@@ -90,10 +94,11 @@ const TodoList = ({
     returnFinishTodo(task[0])
     showAlert('Вы вернули задачу', 'success')
   }
-  
+
   const onRemoveFinishHandler = id => {
     removeFinishTodo(id)
     showAlert('Задача удалена', 'danger')
+
   }
 
   const onSortEnd = ({oldIndex, newIndex}) => {

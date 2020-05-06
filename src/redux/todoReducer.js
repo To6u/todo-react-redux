@@ -1,5 +1,5 @@
-import {ADD_TODO, REMOVE_TODO, FETCH_TODO, TOGGLE_EDIT_FORM, 
-        ADD_FINISH_TODO, FETCH_FINISH_TODO, REMOVE_FINISH_TODO, RETURN_FINISH_TODO, UPDATE_TODO} from './types'
+import {ADD_TODO, REMOVE_TODO, FETCH_TODO, TOGGLE_EDIT_FORM,
+        ADD_FINISH_TODO, FETCH_FINISH_TODO, REMOVE_FINISH_TODO} from './types'
 
 const initialState = {
   todoList: [],
@@ -17,7 +17,7 @@ export const todoReducer = (state = initialState,{type, payload}) => {
       return { ...state, todoList: state.todoList.filter(task => task.id !== payload)}
     case TOGGLE_EDIT_FORM:
       return {...state, todoList: payload}
-    case ADD_FINISH_TODO: 
+    case ADD_FINISH_TODO:
       const newFinishElement = [payload]
       return {...state, finishList: newFinishElement.concat(state.finishList)}
     case FETCH_FINISH_TODO:
