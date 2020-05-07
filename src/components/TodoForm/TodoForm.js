@@ -1,8 +1,8 @@
 import React, {useState} from 'react'
 import {connect} from 'react-redux'
-import { Input } from '../Input/Input'
+import {Input} from '../Input/Input'
 import {addTodo, showAlert} from '../../redux/actions'
-import { Textarea } from '../Textarea/Textarea'
+import {Textarea} from '../Textarea/Textarea'
 import Alert from '../Alert/Alert'
 import './todoForm.sass'
 

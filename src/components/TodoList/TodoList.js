@@ -9,35 +9,47 @@ import {removeTodo, toggleEditForm, addFinishTodo,
 import './todoList.sass'
 
 const TodoList = ({
-      todoList = [], visible, finish,
+      todoList, visible, finish,
       removeTodo, toggleEditForm, addFinishTodo,
       removeFinishTodo, showAlert, returnFinishTodo, updateTodo
   }) => {
 
-  const ref = React.createRef()
+  const TaskItem = ({value}) => {
+    return (
+      <CSSTransition
+        classNames='todo-item'
+        timeout={{enter: 300, exit: 250}}
+      >
+        <ToDoItem
+          onSuccessBtn={() => onSuccessHandler(value.id)}
+          onRemoveBtn={() => onRemoveHandler(value.id)}
+          onEditBtn={() => onEditHandler(value.id)}
+          task={value}
+        />
+      </CSSTransition>
+    )
+  }
 
-  const SortableItem = sortableElement(({value, ref}) => (
-    <CSSTransition
-      classNames='todo-item'
-      timeout={{enter: 300, exit: 250}}
-    >
-      {!value.finish
-        ? <ToDoItem
-            onSuccessBtn={() => onSuccessHandler(value.id)}
-            onRemoveBtn={() => onRemoveHandler(value.id)}
-            onEditBtn={() => onEditHandler(value.id)}
-            task={value}
-            ref={ref}
-          />
-        : <ToDoItem
+  const FinishItem = ({value}) => {
+    return (
+      <CSSTransition
+        classNames='todo-item'
+        timeout={{enter: 300, exit: 250}}
+      >
+        <ToDoItem
+          onRemoveBtn={() => onRemoveFinishHandler(value.id)}
+          onReturnBtn={() => onReturnFinishTodo(value.id)}
+          task={value}
+          className='finish-card'
+        />
+      </CSSTransition>
+    )
+  }
 
-            onRemoveBtn={() => onRemoveFinishHandler(value.id)}
-            onReturnBtn={() => onReturnFinishTodo(value.id)}
-            task={value}
-            className='finish-card'
-          />
-      }
-    </CSSTransition>
+  const SortableItem = sortableElement(({value}) => (
+      !value.finish
+        ? <TaskItem value={value}/>
+        : <FinishItem value={value}/>
   ))
 
   const SortableContainer = sortableContainer(({children}) => {
@@ -45,7 +57,7 @@ const TodoList = ({
   })
 
   const tasks = todoList.map((task, index) =>
-    <SortableItem value={task} ref={ref} key={task.id} index={index}/>
+    <SortableItem value={task} key={task.id} index={index}/>
   )
 
   const noTask = (

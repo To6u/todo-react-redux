@@ -1,19 +1,28 @@
 body
   background: #f3faff
+  max-height: 100vh
+  overflow: hidden
 
-.github-logo
-  width: 80px
-  position: fixed
-  bottom: 10px
-  right: 20px
-  opacity: .7
-  cursor: pointer
+.page
+  position: absolute
+  left: 15px
+  right: 15px
+  transform-origin: center top
+
+.page-enter
+  opacity: 0
+  transform: scale(1.1)
+
+.page-enter-active
+  opacity: 1
   transform: scale(1)
-  transform-origin: right bottom
-  transition: opacity .2s ease, transform .2s ease-out
+  transition: opacity 300ms, transform 300ms
 
-  &:hover
-    opacity: 1
-    transform: scale(1.1)
-    transition: opacity .2s ease, transform .2s ease-out
-    
+.page-exit
+  opacity: 1
+  transform: scale(1)
+
+.page-exit-active
+  opacity: 0
+  transform: scale(0.9)
+  transition: opacity 300ms, transform 300ms

@@ -1,9 +1,9 @@
 import React, {useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
-import { Input } from '../Input/Input'
+import {Input} from '../Input/Input'
 import {editTodo, toggleEditForm} from '../../redux/actions'
 import Alert from '../Alert/Alert'
-import { Textarea } from '../Textarea/Textarea'
+import {Textarea} from '../Textarea/Textarea'
 import './editTaskForm.sass'
 
 export const EditTaskForm = ({props}) => {

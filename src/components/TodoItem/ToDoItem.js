@@ -8,7 +8,7 @@ import removeIcon from './img/trash.svg'
 import editIcon from './img/edit-3.svg'
 import returnIcon from './img/corner-up-right.svg'
 
-const ToDoItem = React.forwardRef (({task, onRemoveBtn, onEditBtn, onSuccessBtn, className, onReturnBtn}, ref) => {
+const ToDoItem = ({task, onRemoveBtn, onEditBtn, onSuccessBtn, className, onReturnBtn}) => {
   const cardClass = [className]
 
   const chekcBackg = {
@@ -68,7 +68,7 @@ const ToDoItem = React.forwardRef (({task, onRemoveBtn, onEditBtn, onSuccessBtn,
   )
 
   return (
-    <Card ref={ref} className={cardClass.join(' ')} border="light">
+    <Card className={cardClass.join(' ')} border="light">
       <Card.Body>
         {task.edit
           ? <EditTaskForm props={task}/>
@@ -77,6 +77,6 @@ const ToDoItem = React.forwardRef (({task, onRemoveBtn, onEditBtn, onSuccessBtn,
       </Card.Body>
     </Card>
   )
-})
+}
 
 export default ToDoItem
