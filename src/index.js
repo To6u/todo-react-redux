@@ -1,19 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {compose, createStore, applyMiddleware} from 'redux'
+import {createStore, applyMiddleware} from 'redux'
 import {Provider} from 'react-redux'
 import thunk from 'redux-thunk'
+import { composeWithDevTools } from 'redux-devtools-extension/logOnlyInProduction';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { rootReducer } from './redux/rootReducer';
 import { forbidenWordsMiddleware } from './redux/middleware'
 import './index.sass'
- 
-const store = createStore(rootReducer, compose(
+
+const composeEnhancers = composeWithDevTools({
+  // options like actionSanitizer, stateSanitizer
+});
+
+const store = createStore(rootReducer, composeEnhancers(
   applyMiddleware(
     thunk, forbidenWordsMiddleware
   ),
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 ))
 
 const app = (
