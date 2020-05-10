@@ -4,6 +4,7 @@ import TodoList from '../TodoList/TodoList';
 import TodoForm from '../TodoForm/TodoForm';
 import {fetchTodo, fetchFinishTodo} from '../../redux/actions'
 import { Loader } from '../Loader'
+import './todo.sass'
 
 const Todo = () => {
   const dispatch = useDispatch()
@@ -21,30 +22,27 @@ const Todo = () => {
   return (
     <div className="container pt-5">
       <div className="row">
-        <div className="col-4">
+        <div className="col-lg-4">
           <h3 className="mb-4 font-weight-light">Создать задачу</h3>
           <TodoForm />
-          <div className="row">
-            <div className="col-12 todo-finish-list">
-              {loadingFinishList
-                ? <Loader/>
-                : null
-              }
-              <h3 className="mb-4 font-weight-light">Выполненные задачи</h3>
-              <TodoList todoList={finishListData} finish={true}/>
-            </div>
-          </div>
         </div>
-        <div className="col-1"></div>
-        <div className="col todo-list">
-          {loadingTodoList
+        <div className="col-lg-8 todo-list">
+            {loadingTodoList
+              ? <Loader/>
+              : null
+            }
+            <h3 className="mb-4 mt-5 mt-lg-0 font-weight-light tasks-list-header px-0">Список задач
+            {/* <FilterTask/> */}
+            </h3>
+            <TodoList todoList={todoListData} finish={false}/>
+        </div>
+        <div className="col-lg-4 todo-finish-list">
+          {loadingFinishList
             ? <Loader/>
             : null
           }
-          <h3 className="mb-4 font-weight-light tasks-list-header px-0">Список задач
-          {/* <FilterTask/> */}
-          </h3>
-          <TodoList todoList={todoListData} finish={false}/>
+          <h3 className="mb-4 font-weight-light">Выполненные задачи</h3>
+          <TodoList todoList={finishListData} finish={true}/>
         </div>
       </div>
     </div>
