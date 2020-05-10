@@ -45,11 +45,8 @@ const TodoList = ({
       </CSSTransition>
     )
   }
-
   const SortableItem = sortableElement(({value}) => (
-      !value.finish
-        ? <TaskItem value={value}/>
-        : <FinishItem value={value}/>
+      !value.finish && <TaskItem value={value}/>
   ))
 
   const SortableContainer = sortableContainer(({children}) => {
@@ -57,7 +54,9 @@ const TodoList = ({
   })
 
   const tasks = todoList.map((task, index) =>
-    <SortableItem value={task} key={task.id} index={index}/>
+    finish
+    ? <FinishItem value={task}/>
+    : <SortableItem value={task} key={task.id} index={index}/>
   )
 
   const noTask = (
