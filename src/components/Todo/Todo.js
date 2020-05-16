@@ -25,6 +25,14 @@ const Todo = () => {
         <div className="col-lg-4">
           <h3 className="mb-4 font-weight-light">Создать задачу</h3>
           <TodoForm />
+          <div className="d-lg-block todo-finish-list">
+            {loadingFinishList
+              ? <Loader/>
+              : null
+            }
+            <h3 className="mb-4 font-weight-light">Выполненные задачи</h3>
+            <TodoList todoList={finishListData} finish={true}/>
+          </div>
         </div>
         <div className="col-lg-8 todo-list">
             {loadingTodoList
@@ -36,7 +44,7 @@ const Todo = () => {
             </h3>
             <TodoList todoList={todoListData} finish={false}/>
         </div>
-        <div className="col-lg-4 todo-finish-list">
+        <div className="col-lg-4 d-lg-none todo-finish-list">
           {loadingFinishList
             ? <Loader/>
             : null
