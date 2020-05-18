@@ -4,7 +4,9 @@ import TodoList from '../TodoList/TodoList';
 import TodoForm from '../TodoForm/TodoForm';
 import {fetchTodo, fetchFinishTodo} from '../../redux/actions'
 import { Loader } from '../Loader'
+import Alert from '../Alert/Alert'
 import './todo.sass'
+import 'antd/dist/antd.css'
 
 const Todo = () => {
   const dispatch = useDispatch()
@@ -12,6 +14,7 @@ const Todo = () => {
   const finishListData = useSelector(state => state.todo.finishList)
   const loadingTodoList = useSelector(state => state.app.loadingTodoList)
   const loadingFinishList = useSelector(state => state.app.loadingFinishList)
+  const alert = useSelector(state => state.app.alert)
 
   useEffect(() => {
     dispatch(fetchTodo())
@@ -21,9 +24,10 @@ const Todo = () => {
 
   return (
     <div className="container pt-5">
+      {alert && Alert()}
       <div className="row">
         <div className="col-lg-4">
-          <h3 className="mb-4 font-weight-light">Создать задачу</h3>
+          <h3 className="mb-4 font-weight-light">Добавить задачу</h3>
           <TodoForm />
           <div className="d-lg-block todo-finish-list">
             {loadingFinishList

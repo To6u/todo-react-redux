@@ -2,14 +2,12 @@ import React, {useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import {Input} from '../Input/Input'
 import {editTodo, toggleEditForm} from '../../redux/actions'
-import Alert from '../Alert/Alert'
 import {Textarea} from '../Textarea/Textarea'
 import './editTaskForm.sass'
 
 export const EditTaskForm = ({props}) => {
   const dispatch = useDispatch()
 
-  const alert = useSelector(state => state.alert)
   const todoList = useSelector(state => state.todo.todoList)
   const [newTitle, setNewTitle] = useState(props.title)
   const [newText, setNewText] = useState(props.text)
@@ -36,7 +34,6 @@ export const EditTaskForm = ({props}) => {
 
   return (
     <form>
-      {alert && <Alert/>}
       <Input value={newTitle} label='' onChange={e => setNewTitle(e.target.value)}/>
       <Textarea value={newText} label='' onChange={e => setNewText(e.target.value)}/>
       <div className="buttons">

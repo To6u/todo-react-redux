@@ -1,4 +1,7 @@
+import React from 'react'
 import axios from 'axios'
+import { notification } from 'antd'
+import { SmileOutlined } from '@ant-design/icons';
 import { SHOW_LOADER_TODO_LIST, HIDE_LOADER_TODO_LIST,
   SHOW_LOADER_FINISH_LIST, HIDE_LOADER_FINISH_LIST,
   SHOW_ALERT, HIDE_ALERT,
@@ -115,7 +118,7 @@ export function addTodo(task) {
       const res = await axios.post(`${url}/todo.json`, todo)
       const payload = {...todo, id: res.data.name}
       dispatch({type: ADD_TODO, payload})
-      dispatch(showAlert('Задача создана', 'success'))
+      notification['success']({message: 'Задача добавлена', description: dateCreate})
     } catch(e) {
       throw new Error('AddTodo: ' + e.message)
     }
@@ -129,6 +132,7 @@ export function removeTodo(id) {
       await axios.delete(`${url}/todo/${id}.json`)
       dispatch({type: REMOVE_TODO, payload: id})
       dispatch(showLoader(HIDE_LOADER_TODO_LIST))
+      notification['error']({message: 'Задача удалена'})
     } catch(e) {
       throw new Error('RemoveTodo: ' + e.masaage)
     }
@@ -140,6 +144,7 @@ export function removeFinishTodo(id) {
     try {
       await axios.delete(`${url}/finishTodo/${id}.json`)
       dispatch({type: REMOVE_FINISH_TODO, payload: id})
+      notification['error']({message: 'Задача удалена'})
     } catch(e) {
       throw new Error('RemoveFinishTodo: ' + e.masaage)
     }
@@ -151,6 +156,7 @@ export function editTodo(todo) {
     try {
       await axios.put(`${url}/todo/${todo.id}.json`, todo)
       dispatch(fetchTodo())
+      notification['success']({message: 'Задача изменена'})
     } catch(e) {
       throw new Error('EditTodo: ' + e.message)
     }
@@ -166,8 +172,10 @@ export function addFinishTodo(todo) {
       const finishTodo = {...todo, finish: true, dateFinish,}
       const res = await axios.post(`${url}/finishTodo.json`, finishTodo)
       const payload = {...finishTodo, id: res.data.name}
+      dispatch({type: REMOVE_TODO, payload: todo.id})
       dispatch({type: ADD_FINISH_TODO, payload})
       dispatch(showLoader(HIDE_LOADER_TODO_LIST))
+      notification.open({message: "Поздравляю! Задача завершена", icon: <SmileOutlined style={{ color: '#30B60B' }}/>})
     } catch(e) {
       throw new Error('FinishTodo: ' + e.message)
     }
@@ -181,9 +189,10 @@ export function returnFinishTodo(task) {
       const returnTask = {...task, finish: false, dateFinish: ''}
       const res = await axios.post(`${url}/todo.json`, returnTask)
       const payload = {...returnTask, id: res.data.name}
-      dispatch(removeFinishTodo(task.id))
+      dispatch({type: REMOVE_FINISH_TODO, payload: task.id})
       dispatch({type: ADD_TODO, payload})
       dispatch(showLoader(HIDE_LOADER_TODO_LIST))
+      notification['success']({message: 'Вы вернули задачу'})
     } catch(e) {
       throw new Error('ReturnTodo: ' + e.message)
     }

@@ -1,9 +1,9 @@
 import React, {useState} from 'react'
 import {connect} from 'react-redux'
+import {notification} from 'antd'
 import {Input} from '../Input/Input'
 import {addTodo, showAlert} from '../../redux/actions'
 import {Textarea} from '../Textarea/Textarea'
-import Alert from '../Alert/Alert'
 import './todoForm.sass'
 
 const TodoForm = ({addTodo, showAlert, alert}) => {
@@ -15,7 +15,7 @@ const TodoForm = ({addTodo, showAlert, alert}) => {
     event.preventDefault()
 
     if (!title.trim()) {
-      return showAlert('Заполните заголовок задачи')
+      return notification['warning']({message: 'Заполните заголовок задачи'})
     } else {
 
     }
@@ -28,10 +28,9 @@ const TodoForm = ({addTodo, showAlert, alert}) => {
 
   return (
     <form onSubmit={e => submitHandler(e)} className='todo-form'>
-      {alert && <Alert />}
       <Input value={title} label='Заголовок задачи' onChange={e => setTitle(e.target.value)}/>
       <Textarea value={text} label='Описание задачи' onChange={e => setText(e.target.value)}/>
-      <button className='btn btn-success' type='submit'>Создать</button>
+      <button className='btn btn-success' type='submit'>Добавить</button>
     </form>
   )
 }

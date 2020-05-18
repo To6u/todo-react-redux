@@ -3,6 +3,8 @@ import {connect} from 'react-redux'
 import {TransitionGroup, CSSTransition} from 'react-transition-group'
 import {sortableContainer, sortableElement} from 'react-sortable-hoc'
 import arrayMove from 'array-move'
+import {notification} from 'antd'
+import { SmileOutlined } from '@ant-design/icons'
 import ToDoItem from '../TodoItem/ToDoItem'
 import {removeTodo, toggleEditForm, addFinishTodo,
   removeFinishTodo, showAlert, returnFinishTodo, updateTodo} from '../../redux/actions'
@@ -16,17 +18,17 @@ const TodoList = ({
 
   const TaskItem = ({value}) => {
     return (
-      <CSSTransition
-        classNames='todo-item'
-        timeout={{enter: 300, exit: 250}}
-      >
+      // <CSSTransition
+      //   classNames='todo-item'
+      //   timeout={{enter: 300, exit: 250}}
+      // >
         <ToDoItem
           onSuccessBtn={() => onSuccessHandler(value.id)}
-          onRemoveBtn={() => onRemoveHandler(value.id)}
+          onRemoveBtn={() => removeTodo(value.id)}
           onEditBtn={() => onEditHandler(value.id)}
           task={value}
         />
-      </CSSTransition>
+      // </CSSTransition>
     )
   }
 
@@ -37,7 +39,7 @@ const TodoList = ({
         timeout={{enter: 300, exit: 250}}
       >
         <ToDoItem
-          onRemoveBtn={() => onRemoveFinishHandler(value.id)}
+          onRemoveBtn={() => removeFinishTodo(value.id)}
           onReturnBtn={() => onReturnFinishTodo(value.id)}
           task={value}
           className='finish-card'
@@ -46,17 +48,23 @@ const TodoList = ({
     )
   }
   const SortableItem = sortableElement(({value}) => (
-      !value.finish && <TaskItem value={value}/>
+    !value.finish && <TaskItem value={value}/>
   ))
 
   const SortableContainer = sortableContainer(({children}) => {
-  return <div className="tasks-container">{children}</div>
+    return <div className="tasks-container">{children}</div>
   })
 
   const tasks = todoList.map((task, index) =>
     finish
-    ? <FinishItem value={task}/>
-    : <SortableItem value={task} key={task.id} index={index}/>
+    ? <FinishItem value={task} key={task.id}/>
+    : <CSSTransition
+        key={task.id}
+        classNames='todo-item'
+        timeout={{enter: 300, exit: 250}}
+      >
+        <SortableItem value={task} index={index}/>
+      </CSSTransition>
   )
 
   const noTask = (
@@ -91,45 +99,30 @@ const TodoList = ({
   const onSuccessHandler = id => {
     const task = todoList.filter(task => task.id === id)
     addFinishTodo(task[0])
-    removeTodo(id)
-    showAlert('Поздравляю! Задача завершена', 'success')
-  }
-
-  const onRemoveHandler = id => {
-    removeTodo(id)
-    showAlert('Задача удалена', 'danger')
   }
 
   const onReturnFinishTodo = id => {
     const task = todoList.filter(task => task.id === id)
     returnFinishTodo(task[0])
-    showAlert('Вы вернули задачу', 'success')
-  }
-
-  const onRemoveFinishHandler = id => {
-    removeFinishTodo(id)
-    showAlert('Задача удалена', 'danger')
-
   }
 
   const onSortEnd = ({oldIndex, newIndex}) => {
     const newList = arrayMove(todoList, oldIndex, newIndex)
+    localStorage.setItem('userSortedList', JSON.stringify(newList))
     updateTodo(newList)
   }
 
   if(!todoList.length) {
     return (
-      <TransitionGroup>
-        {noTask}
-      </TransitionGroup>
+      <React.Fragment>{noTask}</React.Fragment>
     )
   } else {
     return (
-      <TransitionGroup>
-        <SortableContainer onSortEnd={onSortEnd}>
+      <SortableContainer onSortEnd={onSortEnd}>
+        <TransitionGroup className="todo-list">
           {tasks}
-        </SortableContainer>
-      </TransitionGroup>
+        </TransitionGroup>
+      </SortableContainer>
     )
   }
 }

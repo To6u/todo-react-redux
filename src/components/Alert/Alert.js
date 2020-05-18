@@ -28,6 +28,7 @@ const Alert = () => {
         </button>
       </div>
     </CSSTransition>
-)}
+  )
+}
 
 export default Alert
