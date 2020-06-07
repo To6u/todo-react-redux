@@ -11,6 +11,8 @@ const TodoForm = ({addTodo, showAlert, alert}) => {
   const [title, setTitle] = useState('')
   const [text, setText] = useState('')
 
+  const titleInput = React.createRef()
+
   const submitHandler = event => {
     event.preventDefault()
 
@@ -24,11 +26,12 @@ const TodoForm = ({addTodo, showAlert, alert}) => {
     addTodo(newTodo)
     setTitle('')
     setText('')
+    console.log(titleInput)
   }
 
   return (
     <form onSubmit={e => submitHandler(e)} className='todo-form'>
-      <Input value={title} label='Заголовок задачи' onChange={e => setTitle(e.target.value)}/>
+      <Input ref={titleInput} value={title} label='Заголовок задачи' onChange={e => setTitle(e.target.value)}/>
       <Textarea value={text} label='Описание задачи' onChange={e => setText(e.target.value)}/>
       <button className='btn btn-success' type='submit'>Добавить</button>
     </form>

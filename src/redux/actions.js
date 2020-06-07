@@ -172,6 +172,7 @@ export function addFinishTodo(todo) {
       const finishTodo = {...todo, finish: true, dateFinish,}
       const res = await axios.post(`${url}/finishTodo.json`, finishTodo)
       const payload = {...finishTodo, id: res.data.name}
+      await axios.delete(`${url}/todo/${todo.id}.json`)
       dispatch({type: REMOVE_TODO, payload: todo.id})
       dispatch({type: ADD_FINISH_TODO, payload})
       dispatch(showLoader(HIDE_LOADER_TODO_LIST))
@@ -189,6 +190,7 @@ export function returnFinishTodo(task) {
       const returnTask = {...task, finish: false, dateFinish: ''}
       const res = await axios.post(`${url}/todo.json`, returnTask)
       const payload = {...returnTask, id: res.data.name}
+      await axios.delete(`${url}/finishTodo/${task.id}.json`)
       dispatch({type: REMOVE_FINISH_TODO, payload: task.id})
       dispatch({type: ADD_TODO, payload})
       dispatch(showLoader(HIDE_LOADER_TODO_LIST))

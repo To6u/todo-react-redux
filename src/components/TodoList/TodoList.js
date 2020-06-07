@@ -3,8 +3,6 @@ import {connect} from 'react-redux'
 import {TransitionGroup, CSSTransition} from 'react-transition-group'
 import {sortableContainer, sortableElement} from 'react-sortable-hoc'
 import arrayMove from 'array-move'
-import {notification} from 'antd'
-import { SmileOutlined } from '@ant-design/icons'
 import ToDoItem from '../TodoItem/ToDoItem'
 import {removeTodo, toggleEditForm, addFinishTodo,
   removeFinishTodo, showAlert, returnFinishTodo, updateTodo} from '../../redux/actions'

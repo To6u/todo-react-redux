@@ -21,7 +21,12 @@
     display: block
     height: 100%
     overflow: scroll
+    -ms-overflow-style: none
+    scrollbar-width: none
 
+    &::-webkit-scrollbar
+      width: 0px
+      background: transparent
 
   .spinner-border
     left: -36px
