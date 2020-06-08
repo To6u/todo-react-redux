@@ -1,9 +1,10 @@
 import {ADD_TODO, REMOVE_TODO, FETCH_TODO, TOGGLE_EDIT_FORM,
-        ADD_FINISH_TODO, FETCH_FINISH_TODO, REMOVE_FINISH_TODO} from './types'
+        ADD_FINISH_TODO, FETCH_FINISH_TODO, REMOVE_FINISH_TODO, SHOW_ALL_FINISH_LIST_TODO, HIDE_ALL_FINISH_LIST_TODO} from './types'
 
 const initialState = {
   todoList: [],
   finishList: [],
+  visibleFinishList: false
 }
 
 export const todoReducer = (state = initialState,{type, payload}) => {
@@ -24,6 +25,10 @@ export const todoReducer = (state = initialState,{type, payload}) => {
       return {...state, finishList: payload}
     case REMOVE_FINISH_TODO:
       return {...state, finishList: state.finishList.filter(task => task.id !== payload)}
+    case SHOW_ALL_FINISH_LIST_TODO:
+      return {...state, visibleFinishList: true}
+    case HIDE_ALL_FINISH_LIST_TODO:
+      return {...state, visibleFinishList: false}
     default: return state
   }
 }

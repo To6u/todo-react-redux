@@ -1,4 +1,4 @@
-import { SHOW_LOADER_TODO_LIST, SHOW_LOADER_FINISH_LIST, HIDE_LOADER_TODO_LIST, SHOW_ALERT, HIDE_ALERT, HIDE_LOADER_FINISH_LIST } from "./types"
+import { SHOW_LOADER_TODO_LIST, SHOW_LOADER_FINISH_LIST, HIDE_LOADER_TODO_LIST, SHOW_ALERT, HIDE_ALERT, HIDE_LOADER_FINISH_LIST} from "./types"
 import Todo from '../components/Todo/Todo'
 import About from '../components/About/About'
 

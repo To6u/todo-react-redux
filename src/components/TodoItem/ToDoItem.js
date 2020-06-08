@@ -2,6 +2,7 @@ import React from 'react'
 // import { Trash2, Edit2, CheckCircle, CornerUpRight} from 'react-feather'
 import { EditTaskForm } from '../EditTaskForm/EditTaskForm'
 import { Card } from 'react-bootstrap'
+import { Tooltip } from 'antd';
 import './ToDoItem.sass'
 import checkIcon from './img/check-circle.svg'
 import removeIcon from './img/trash.svg'
@@ -52,15 +53,25 @@ const ToDoItem = ({task, onRemoveBtn, onEditBtn, onSuccessBtn, className, onRetu
       { !task.finish
         ? <React.Fragment>
             <div className="task-btns btn-group-vertical" role="group" aria-label="Basic example">
-              <input onClick={onSuccessBtn} style={chekcBackg} type="submit" value="" className="btn btn-secondary"/>
-              <input onClick={onRemoveBtn} style={removeBackg} type="submit" value="" className="btn btn-secondary i-close"/>
-              <input onClick={onEditBtn} style={editBackg} type="submit" value="" className="btn btn-secondary"/>
+              <Tooltip title="Завершить" placement="left">
+                <input onClick={onSuccessBtn} style={chekcBackg} type="submit" value="" className="btn btn-secondary"/>
+              </Tooltip>
+              <Tooltip title="Удалить" placement="left">
+                <input onClick={onRemoveBtn} style={removeBackg} type="submit" value="" className="btn btn-secondary i-close"/>
+              </Tooltip>
+              <Tooltip title="Изменить" placement="left">
+                <input onClick={onEditBtn} style={editBackg} type="submit" value="" className="btn btn-secondary"/>
+              </Tooltip>
             </div>
           </React.Fragment>
         : <div className="finish-buttons">
             <div className="btn-group" role="group" aria-label="Basic example">
-              <input onClick={onRemoveBtn} style={removeBackg} type="submit" value="" className="btn btn-secondary i-close"/>
+              <Tooltip title="Удалить" placement="top">
+                <input onClick={onRemoveBtn} style={removeBackg} type="submit" value="" className="btn btn-secondary i-close"/>
+              </Tooltip>
+              <Tooltip title="Вернуть" placement="top">
               <input onClick={onReturnBtn} style={returnBackg} type="submit" value="" className="btn btn-secondary"/>
+              </Tooltip>
             </div>
           </div>
       }

@@ -3,15 +3,16 @@ import {connect} from 'react-redux'
 import {TransitionGroup, CSSTransition} from 'react-transition-group'
 import {sortableContainer, sortableElement} from 'react-sortable-hoc'
 import arrayMove from 'array-move'
+import { Button, Tooltip, Drawer } from 'antd';
+import { EyeOutlined } from '@ant-design/icons';
 import ToDoItem from '../TodoItem/ToDoItem'
 import {removeTodo, toggleEditForm, addFinishTodo,
-  removeFinishTodo, showAlert, returnFinishTodo, updateTodo} from '../../redux/actions'
+  removeFinishTodo, returnFinishTodo, updateTodo, showFinishList, hideFinishList} from '../../redux/actions'
 import './todoList.sass'
 
 const TodoList = ({
-      todoList, visible, finish,
-      removeTodo, toggleEditForm, addFinishTodo,
-      removeFinishTodo, showAlert, returnFinishTodo, updateTodo
+      todoList, visible, finish, visibleFinishList,
+      removeTodo, toggleEditForm, addFinishTodo, removeFinishTodo, returnFinishTodo, updateTodo, showFinishList, hideFinishList
   }) => {
 
   const TaskItem = ({value}) => {
@@ -116,23 +117,47 @@ const TodoList = ({
     )
   } else {
     return (
-      <SortableContainer onSortEnd={onSortEnd}>
-        <TransitionGroup className="todo-list">
-          {tasks}
-        </TransitionGroup>
-      </SortableContainer>
+      <React.Fragment>
+        {finish
+          ? (<>
+              <Tooltip title="Все выполненные задачи" placeholder="right">
+                <Button className="show-finish-list" shape="circle" icon={<EyeOutlined />} onClick={() => showFinishList()} />
+              </Tooltip>
+              <TransitionGroup className="todo-list">
+                {tasks}
+              </TransitionGroup>
+              <Drawer
+                title="Выполненные задачи"
+                placement="left"
+                closable={false}
+                getContainer={false}
+                onClose={() => hideFinishList()}
+                visible={visibleFinishList}
+                width={400}
+              >
+                {tasks}
+              </Drawer>
+            </>)
+          : (<SortableContainer onSortEnd={onSortEnd}>
+              <TransitionGroup className="todo-list">
+                {tasks}
+              </TransitionGroup>
+            </SortableContainer>)
+        }
+        </React.Fragment>
     )
   }
 }
 
 const mapStateToProps = state => ({
   loading: state.app.loading,
-  visible: state.app.visible
+  visible: state.app.visible,
+  visibleFinishList: state.todo.visibleFinishList
 })
 
 const mapDispatchToProps = {
-  removeTodo, toggleEditForm, addFinishTodo, removeFinishTodo, showAlert,
-  returnFinishTodo, updateTodo
+  removeTodo, toggleEditForm, addFinishTodo, removeFinishTodo,
+  returnFinishTodo, updateTodo, showFinishList, hideFinishList
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TodoList)

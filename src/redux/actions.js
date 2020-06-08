@@ -6,7 +6,7 @@ import { SHOW_LOADER_TODO_LIST, HIDE_LOADER_TODO_LIST,
   SHOW_LOADER_FINISH_LIST, HIDE_LOADER_FINISH_LIST,
   SHOW_ALERT, HIDE_ALERT,
   ADD_TODO, REMOVE_TODO, FETCH_TODO, TOGGLE_EDIT_FORM, ADD_FINISH_TODO,
-  FETCH_FINISH_TODO, REMOVE_FINISH_TODO} from "./types";
+  FETCH_FINISH_TODO, REMOVE_FINISH_TODO, SHOW_ALL_FINISH_LIST_TODO, HIDE_ALL_FINISH_LIST_TODO} from "./types";
 
 const url = process.env.REACT_APP_DB_URL
 
@@ -15,6 +15,22 @@ export function showLoader(type) {
 }
 export function hideLoader(type) {
   return { type }
+}
+
+export function showFinishList() {
+  return dispatch => {
+    dispatch({
+      type: SHOW_ALL_FINISH_LIST_TODO
+    })
+  }
+}
+
+export function hideFinishList() {
+  return dispatch => {
+    dispatch({
+      type: HIDE_ALL_FINISH_LIST_TODO
+    })
+  }
 }
 
 export function showAlert(text, type = 'warning') {
