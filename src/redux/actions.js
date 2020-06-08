@@ -5,7 +5,7 @@ import { SmileOutlined } from '@ant-design/icons';
 import { SHOW_LOADER_TODO_LIST, HIDE_LOADER_TODO_LIST,
   SHOW_LOADER_FINISH_LIST, HIDE_LOADER_FINISH_LIST,
   SHOW_ALERT, HIDE_ALERT,
-  ADD_TODO, REMOVE_TODO, FETCH_TODO, TOGGLE_EDIT_FORM, ADD_FINISH_TODO,
+  ADD_TODO, REMOVE_TODO, FETCH_TODO, TOGGLE_EDIT_FORM, ADD_FINISH_TODO, NO_TODO, NO_FINISH_TODO,
   FETCH_FINISH_TODO, REMOVE_FINISH_TODO, SHOW_ALL_FINISH_LIST_TODO, HIDE_ALL_FINISH_LIST_TODO} from "./types";
 
 const url = process.env.REACT_APP_DB_URL
@@ -17,12 +17,16 @@ export function hideLoader(type) {
   return { type }
 }
 
+export function emptyTodo(payload) {
+  return { type: NO_TODO, payload }
+}
+
+export function emptyFinishTodo(payload) {
+  return { type: NO_FINISH_TODO, payload }
+}
+
 export function showFinishList() {
-  return dispatch => {
-    dispatch({
-      type: SHOW_ALL_FINISH_LIST_TODO
-    })
-  }
+  return dispatch => { dispatch({ type: SHOW_ALL_FINISH_LIST_TODO }) }
 }
 
 export function hideFinishList() {
@@ -81,10 +85,12 @@ export function fetchFinishTodo() {
         setTimeout (() => {
           dispatch({type: FETCH_FINISH_TODO, payload})
           dispatch(hideLoader(HIDE_LOADER_FINISH_LIST))
+          dispatch(emptyFinishTodo(false))
         }, 100)
       } else {
         dispatch({type: FETCH_FINISH_TODO, payload: []})
         dispatch(hideLoader(HIDE_LOADER_FINISH_LIST))
+        dispatch(emptyFinishTodo(true))
       }
     } catch(e) {
       throw new Error('FetchFinishTodo: ' + e.message)
@@ -107,10 +113,12 @@ export function fetchTodo() {
         setTimeout (() => {
           dispatch({type: FETCH_TODO, payload})
           dispatch(hideLoader(HIDE_LOADER_TODO_LIST))
+          dispatch(emptyTodo(false))
         }, 100)
       } else {
         dispatch({type: FETCH_TODO, payload: []})
         dispatch(hideLoader(HIDE_LOADER_TODO_LIST))
+        dispatch(emptyTodo(true))
       }
     } catch (e) {
       throw new Error('FetchTodo: ' + e.message)
@@ -181,7 +189,7 @@ export function editTodo(todo) {
 
 export function addFinishTodo(todo) {
   return async dispatch => {
-    dispatch(showLoader(SHOW_LOADER_TODO_LIST))
+    dispatch(showLoader(SHOW_LOADER_FINISH_LIST))
     try {
       const dateOptions = {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric'}
       const dateFinish = new Date().toLocaleDateString('en-GB', dateOptions)
@@ -191,7 +199,7 @@ export function addFinishTodo(todo) {
       await axios.delete(`${url}/todo/${todo.id}.json`)
       dispatch({type: REMOVE_TODO, payload: todo.id})
       dispatch({type: ADD_FINISH_TODO, payload})
-      dispatch(showLoader(HIDE_LOADER_TODO_LIST))
+      dispatch(showLoader(HIDE_LOADER_FINISH_LIST))
       notification.open({message: "Поздравляю! Задача завершена", icon: <SmileOutlined style={{ color: '#30B60B' }}/>})
     } catch(e) {
       throw new Error('FinishTodo: ' + e.message)
@@ -209,7 +217,9 @@ export function returnFinishTodo(task) {
       await axios.delete(`${url}/finishTodo/${task.id}.json`)
       dispatch({type: REMOVE_FINISH_TODO, payload: task.id})
       dispatch({type: ADD_TODO, payload})
-      dispatch(showLoader(HIDE_LOADER_TODO_LIST))
+      setTimeout(() => {
+        dispatch(showLoader(HIDE_LOADER_TODO_LIST))
+      }, 100)
       notification['success']({message: 'Вы вернули задачу'})
     } catch(e) {
       throw new Error('ReturnTodo: ' + e.message)

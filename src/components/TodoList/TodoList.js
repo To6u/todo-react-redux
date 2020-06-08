@@ -6,44 +6,34 @@ import arrayMove from 'array-move'
 import { Button, Tooltip, Drawer } from 'antd';
 import { EyeOutlined } from '@ant-design/icons';
 import ToDoItem from '../TodoItem/ToDoItem'
-import {removeTodo, toggleEditForm, addFinishTodo,
+import {removeTodo, toggleEditForm, addFinishTodo, emptyFinishTodo, emptyTodo,
   removeFinishTodo, returnFinishTodo, updateTodo, showFinishList, hideFinishList} from '../../redux/actions'
 import './todoList.sass'
 
 const TodoList = ({
-      todoList, visible, finish, visibleFinishList,
+      todoList, finish, visibleFinishList, noTasks, noFinishTask,
       removeTodo, toggleEditForm, addFinishTodo, removeFinishTodo, returnFinishTodo, updateTodo, showFinishList, hideFinishList
   }) => {
 
   const TaskItem = ({value}) => {
     return (
-      // <CSSTransition
-      //   classNames='todo-item'
-      //   timeout={{enter: 300, exit: 250}}
-      // >
-        <ToDoItem
-          onSuccessBtn={() => onSuccessHandler(value.id)}
-          onRemoveBtn={() => removeTodo(value.id)}
-          onEditBtn={() => onEditHandler(value.id)}
-          task={value}
-        />
-      // </CSSTransition>
+      <ToDoItem
+        onSuccessBtn={() => onSuccessHandler(value.id)}
+        onRemoveBtn={() => removeTodo(value.id)}
+        onEditBtn={() => onEditHandler(value.id)}
+        task={value}
+      />
     )
   }
 
   const FinishItem = ({value}) => {
     return (
-      <CSSTransition
-        classNames='todo-item'
-        timeout={{enter: 300, exit: 250}}
-      >
-        <ToDoItem
-          onRemoveBtn={() => removeFinishTodo(value.id)}
-          onReturnBtn={() => onReturnFinishTodo(value.id)}
-          task={value}
-          className='finish-card'
-        />
-      </CSSTransition>
+      <ToDoItem
+        onRemoveBtn={() => removeFinishTodo(value.id)}
+        onReturnBtn={() => onReturnFinishTodo(value.id)}
+        task={value}
+        className='finish-card'
+      />
     )
   }
   const SortableItem = sortableElement(({value}) => (
@@ -56,32 +46,48 @@ const TodoList = ({
 
   const tasks = todoList.map((task, index) =>
     finish
-    ? <FinishItem value={task} key={task.id}/>
-    : <CSSTransition
+    ? (<CSSTransition
         key={task.id}
         classNames='todo-item'
-        timeout={{enter: 300, exit: 250}}
+        timeout={{enter: 300, exit: 400}}
+      >
+        <FinishItem value={task} key={task.id}/>
+      </CSSTransition>)
+    : (<CSSTransition
+        key={task.id}
+        classNames='todo-item'
+        timeout={{enter: 300, exit: 400}}
+        mountOnEnter
+        unmountOnExit
       >
         <SortableItem value={task} index={index}/>
-      </CSSTransition>
+      </CSSTransition>)
   )
 
   const noTask = (
-    <CSSTransition
-      in={visible}
-      timeout={{enter: 200, exit: 100}}
-      classNames={'no-task'}
-    >
+    <>
       {!finish
-        ? <p className='no-task text-left font-weight-light mb-1'>Любую задачу реально выполнить, если разбить ее на выполнимые части.</p>
-        : <React.Fragment>
-            <p className='no-task text-left font-weight-light mb-1'>
-            «Удовлетворённый человек решает поставленную задачу, но он не превращает задачу в проблему.»
-            </p>
-            <p className='no-task text-left font-weight-lighter'>Макс Люшер</p>
-          </React.Fragment>
+        ? (<CSSTransition
+            in={noTasks}
+            timeout={{enter: 300, exit: 400}}
+            classNames='no-task'
+          >
+            <p className='no-task text-left font-weight-light mb-1'>Любую задачу реально выполнить, если разбить ее на выполнимые части.</p>
+          </CSSTransition>)
+        : (<CSSTransition
+            in={noFinishTask}
+            timeout={{enter: 300, exit: 400}}
+            classNames='no-task'
+          >
+            <div>
+              <p className='no-task text-left font-weight-light mb-1'>
+              «Удовлетворённый человек решает поставленную задачу, но он не превращает задачу в проблему.»
+              </p>
+              <p className='no-task text-left font-weight-lighter'>Макс Люшер</p>
+            </div>
+          </CSSTransition>)
       }
-    </CSSTransition>
+    </>
   )
 
   const onEditHandler = id => {
@@ -111,53 +117,67 @@ const TodoList = ({
     updateTodo(newList)
   }
 
-  if(!todoList.length) {
-    return (
-      <React.Fragment>{noTask}</React.Fragment>
-    )
-  } else {
-    return (
-      <React.Fragment>
-        {finish
-          ? (<>
-              <Tooltip title="Все выполненные задачи" placeholder="right">
-                <Button className="show-finish-list" shape="circle" icon={<EyeOutlined />} onClick={() => showFinishList()} />
-              </Tooltip>
-              <TransitionGroup className="todo-list">
-                {tasks}
-              </TransitionGroup>
-              <Drawer
-                title="Выполненные задачи"
-                placement="left"
-                closable={false}
-                getContainer={false}
-                onClose={() => hideFinishList()}
-                visible={visibleFinishList}
-                width={400}
-              >
-                {tasks}
-              </Drawer>
-            </>)
-          : (<SortableContainer onSortEnd={onSortEnd}>
-              <TransitionGroup className="todo-list">
-                {tasks}
-              </TransitionGroup>
-            </SortableContainer>)
-        }
-        </React.Fragment>
-    )
+  if (finish && !todoList.length) {
+    emptyFinishTodo(true)
+  } else if (!finish && !todoList.length) {
+    emptyTodo(true)
   }
+
+
+  return (
+    <React.Fragment>
+      {finish
+        ? (<>
+            {noTask}
+            <Tooltip title="Все выполненные задачи" placeholder="right">
+              <Button className="show-finish-list d-lg-block d-none" shape="circle" icon={<EyeOutlined />} onClick={() => showFinishList()} />
+            </Tooltip>
+            <TransitionGroup>
+              {tasks}
+            </TransitionGroup>
+            <Drawer
+              title="Выполненные задачи"
+              placement="left"
+              closable={false}
+              getContainer={false}
+              onClose={() => hideFinishList()}
+              visible={visibleFinishList}
+              width={400}
+              className="d-lg-block d-none"
+            >
+              <TransitionGroup>
+                {tasks}
+              </TransitionGroup>
+            </Drawer>
+          </>)
+        : (<>
+            {noTask}
+            {todoList.length
+              ? (
+                <SortableContainer onSortEnd={onSortEnd}>
+                  <TransitionGroup>
+                    {tasks}
+                  </TransitionGroup>
+                </SortableContainer>
+              )
+              : null
+            }
+          </>)
+      }
+      </React.Fragment>
+  )
 }
 
 const mapStateToProps = state => ({
   loading: state.app.loading,
-  visible: state.app.visible,
-  visibleFinishList: state.todo.visibleFinishList
+  visibleFinishList: state.todo.visibleFinishList,
+  noTasks: state.todo.noTasks,
+  noFinishTask: state.todo.noFinishTask
 })
 
 const mapDispatchToProps = {
   removeTodo, toggleEditForm, addFinishTodo, removeFinishTodo,
-  returnFinishTodo, updateTodo, showFinishList, hideFinishList
+  returnFinishTodo, updateTodo, showFinishList, hideFinishList, emptyFinishTodo, emptyTodo
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TodoList)

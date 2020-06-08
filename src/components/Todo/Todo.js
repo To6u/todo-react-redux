@@ -1,9 +1,10 @@
 import React, {useEffect}  from 'react'
 import {useDispatch, useSelector} from 'react-redux'
+import {CSSTransition} from 'react-transition-group'
+import {Spin} from 'antd'
 import TodoList from '../TodoList/TodoList';
 import TodoForm from '../TodoForm/TodoForm';
 import {fetchTodo, fetchFinishTodo} from '../../redux/actions'
-import { Loader } from '../Loader'
 import Alert from '../Alert/Alert'
 import './todo.sass'
 import 'antd/dist/antd.css'
@@ -23,36 +24,51 @@ const Todo = () => {
   }, [])
 
   return (
-    <div className="container pt-5">
+    <div className="container-xl pt-5">
       {alert && Alert()}
       <div className="row">
         <div className="col-lg-4">
           <h3 className="mb-4 font-weight-light">Добавить задачу</h3>
           <TodoForm />
-          <div className="d-lg-block todo-finish-list">
-            {loadingFinishList
-              ? <Loader/>
-              : null
-            }
-            <h3 className="mb-4 font-weight-light">Выполненные задачи</h3>
-            <TodoList todoList={finishListData} finish={true}/>
+          <div className="pt-4">
+            <iv className="d-lg-block mt-5 d-none todo-finish-list">
+              <CSSTransition
+                in={loadingFinishList}
+                timeout={500}
+                classNames="loading-list"
+                unmountOnExit
+                mountOnEnter
+              >
+                <div className="loader"><Spin/></div>
+              </CSSTransition>
+              <h3 className="font-weight-light">Выполненные задачи</h3>
+              <TodoList todoList={finishListData} finish={true}/>
+            </iv>
           </div>
         </div>
         <div className="col-lg-8 todo-list">
-            {loadingTodoList
-              ? <Loader/>
-              : null
-            }
+            <CSSTransition
+              in={loadingTodoList}
+              timeout={500}
+              classNames="loading-list"
+              unmountOnExit
+            >
+              <div className="loader"><Spin/></div>
+            </CSSTransition>
             <h3 className="mb-4 mt-5 mt-lg-0 font-weight-light tasks-list-header px-0">Список задач
             {/* <FilterTask/> */}
             </h3>
             <TodoList todoList={todoListData} finish={false}/>
         </div>
         <div className="col-lg-4 d-lg-none todo-finish-list">
-          {loadingFinishList
-            ? <Loader/>
-            : null
-          }
+          <CSSTransition
+            in={loadingFinishList}
+            timeout={500}
+            classNames="loading-list"
+            unmountOnExit
+          >
+            <div className="loader"><Spin/></div>
+          </CSSTransition>
           <h3 className="mb-4 font-weight-light">Выполненные задачи</h3>
           <TodoList todoList={finishListData} finish={true}/>
         </div>

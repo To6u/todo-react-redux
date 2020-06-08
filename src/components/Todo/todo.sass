@@ -1,0 +1,14 @@
+.loading-list-enter
+  opacity: 0
+  transform: scale(0.9)
+.loading-list-enter-active
+  opacity: 1
+  transform: translateX(0)
+  transition: opacity 300ms, transform 300ms
+.loading-list-exit
+  opacity: 1
+.loading-list-exit-active
+  opacity: 0
+  transform: scale(0.9)
+  height: 0
+  transition: opacity 300ms, transform 300ms

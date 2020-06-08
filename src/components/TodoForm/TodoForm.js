@@ -17,7 +17,7 @@ const TodoForm = ({addTodo, showAlert, alert}) => {
     event.preventDefault()
 
     if (!title.trim()) {
-      return notification['warning']({message: 'Заполните заголовок задачи'})
+      return notification['warning']({message: 'Опишите задачу!'})
     } else {
 
     }
@@ -31,8 +31,8 @@ const TodoForm = ({addTodo, showAlert, alert}) => {
 
   return (
     <form onSubmit={e => submitHandler(e)} className='todo-form'>
-      <Input ref={titleInput} value={title} label='Заголовок задачи' onChange={e => setTitle(e.target.value)}/>
-      <Textarea value={text} label='Описание задачи' onChange={e => setText(e.target.value)}/>
+      <Textarea ref={titleInput} value={title} label='Задача' onChange={e => setTitle(e.target.value)}/>
+      {/* <Textarea value={text} label='Описание задачи' onChange={e => setText(e.target.value)}/> */}
       <button className='btn btn-success' type='submit'>Добавить</button>
     </form>
   )

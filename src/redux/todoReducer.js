@@ -1,10 +1,12 @@
-import {ADD_TODO, REMOVE_TODO, FETCH_TODO, TOGGLE_EDIT_FORM,
+import {ADD_TODO, REMOVE_TODO, FETCH_TODO, TOGGLE_EDIT_FORM, NO_TODO, NO_FINISH_TODO,
         ADD_FINISH_TODO, FETCH_FINISH_TODO, REMOVE_FINISH_TODO, SHOW_ALL_FINISH_LIST_TODO, HIDE_ALL_FINISH_LIST_TODO} from './types'
 
 const initialState = {
   todoList: [],
   finishList: [],
-  visibleFinishList: false
+  visibleFinishList: false,
+  noTasks: false,
+  noFinishTask: false
 }
 
 export const todoReducer = (state = initialState,{type, payload}) => {
@@ -29,6 +31,10 @@ export const todoReducer = (state = initialState,{type, payload}) => {
       return {...state, visibleFinishList: true}
     case HIDE_ALL_FINISH_LIST_TODO:
       return {...state, visibleFinishList: false}
+    case NO_TODO:
+      return {...state, noTasks: payload}
+    case NO_FINISH_TODO:
+      return {...state, noFinishTask: payload}
     default: return state
   }
 }

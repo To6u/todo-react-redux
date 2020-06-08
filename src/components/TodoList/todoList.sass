@@ -1,14 +1,13 @@
 .todo-list
-  .spinner-border
-    left: -36px
-    top: 3px
-
+  .loader
+    position: absolute
+    top: -24px
+    left: 14px
   .tasks-container
     max-height: 80vh
     overflow: scroll
-    padding: 10px 10px 0
+    padding-top: 20px
     -ms-overflow-style: none
-    box-shadow: inset 0 0 4px #cccccc6b
     border-radius: 7px
 
     &::-webkit-scrollbar
@@ -28,9 +27,10 @@
       width: 0px
       background: transparent
 
-  .spinner-border
-    left: -36px
-    top: 46px
+  .loader
+    position: absolute
+    top: -24px
+    left: 0
 
   .date
     .card-date:last-child
@@ -52,7 +52,7 @@
 
 .show-finish-list
   position: absolute !important
-  top: 6px
+  top: 4px
   right: 0
 
 .anticon
@@ -69,7 +69,6 @@
   font-weight: 300 !important
   text-align: center
 
-
 .tasks-list-header
   display: flex
   justify-content: space-between
@@ -82,13 +81,17 @@
 .todo-item-enter-active
   animation: todo-list .3s ease-in alternate-reverse
 
-.appear-todo-item-enter-active
+.no-task-enter
+  opacity: 1
+
+.no-task-exit
+  opacity: 0
 
 .no-task-exit-active
-  animation: no-task .1s ease forwards
+  animation: no-task .3s ease forwards
 
 .no-task-enter-active
-  animation: no-task .2s ease alternate-reverse
+  animation: no-task .3s ease alternate-reverse
 
 @keyframes todo-list
   0%
