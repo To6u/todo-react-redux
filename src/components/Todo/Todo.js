@@ -4,22 +4,19 @@ import {CSSTransition} from 'react-transition-group'
 import {Spin} from 'antd'
 import TodoList from '../TodoList/TodoList';
 import TodoForm from '../TodoForm/TodoForm';
-import {fetchTodo, fetchFinishTodo} from '../../redux/actions'
+import {fetchTodo} from '../../redux/actions'
 import Alert from '../Alert/Alert'
 import './todo.sass'
 import 'antd/dist/antd.css'
 
 const Todo = () => {
   const dispatch = useDispatch()
-  const todoListData = useSelector(state => state.todo.todoList)
-  const finishListData = useSelector(state => state.todo.finishList)
   const loadingTodoList = useSelector(state => state.app.loadingTodoList)
   const loadingFinishList = useSelector(state => state.app.loadingFinishList)
   const alert = useSelector(state => state.app.alert)
 
   useEffect(() => {
     dispatch(fetchTodo())
-    dispatch(fetchFinishTodo())
     // eslint-disable-next-line
   }, [])
 
@@ -31,7 +28,7 @@ const Todo = () => {
           <h3 className="mb-4 font-weight-light">Добавить задачу</h3>
           <TodoForm />
           <div className="pt-4">
-            <iv className="d-lg-block mt-5 d-none todo-finish-list">
+            <div className="d-lg-block mt-5 d-none todo-finish-list">
               <CSSTransition
                 in={loadingFinishList}
                 timeout={500}
@@ -42,8 +39,8 @@ const Todo = () => {
                 <div className="loader"><Spin/></div>
               </CSSTransition>
               <h3 className="font-weight-light">Выполненные задачи</h3>
-              <TodoList todoList={finishListData} finish={true}/>
-            </iv>
+              <TodoList finish={true}/>
+            </div>
           </div>
         </div>
         <div className="col-lg-8 todo-list">
@@ -58,7 +55,7 @@ const Todo = () => {
             <h3 className="mb-4 mt-5 mt-lg-0 font-weight-light tasks-list-header px-0">Список задач
             {/* <FilterTask/> */}
             </h3>
-            <TodoList todoList={todoListData} finish={false}/>
+            <TodoList/>
         </div>
         <div className="col-lg-4 d-lg-none todo-finish-list">
           <CSSTransition
@@ -70,7 +67,7 @@ const Todo = () => {
             <div className="loader"><Spin/></div>
           </CSSTransition>
           <h3 className="mb-4 font-weight-light">Выполненные задачи</h3>
-          <TodoList todoList={finishListData} finish={true}/>
+          <TodoList finish={true}/>
         </div>
       </div>
     </div>

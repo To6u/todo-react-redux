@@ -1,18 +1,17 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {TransitionGroup, CSSTransition} from 'react-transition-group'
-import {sortableContainer, sortableElement} from 'react-sortable-hoc'
 import arrayMove from 'array-move'
 import { Button, Tooltip, Drawer } from 'antd';
 import { EyeOutlined } from '@ant-design/icons';
 import ToDoItem from '../TodoItem/ToDoItem'
 import {removeTodo, toggleEditForm, addFinishTodo, emptyFinishTodo, emptyTodo,
-  removeFinishTodo, returnFinishTodo, updateTodo, showFinishList, hideFinishList} from '../../redux/actions'
+  returnFinishTodo, updateTodo, showFinishList, hideFinishList} from '../../redux/actions'
 import './todoList.sass'
 
 const TodoList = ({
       todoList, finish, visibleFinishList, noTasks, noFinishTask,
-      removeTodo, toggleEditForm, addFinishTodo, removeFinishTodo, returnFinishTodo, updateTodo, showFinishList, hideFinishList
+      removeTodo, toggleEditForm, addFinishTodo, returnFinishTodo, updateTodo, showFinishList, hideFinishList
   }) => {
 
   const TaskItem = ({value}) => {
@@ -29,23 +28,19 @@ const TodoList = ({
   const FinishItem = ({value}) => {
     return (
       <ToDoItem
-        onRemoveBtn={() => removeFinishTodo(value.id)}
+        onRemoveBtn={() => removeTodo(value.id)}
         onReturnBtn={() => onReturnFinishTodo(value.id)}
         task={value}
         className='finish-card'
       />
     )
   }
-  const SortableItem = sortableElement(({value}) => (
-    !value.finish && <TaskItem value={value}/>
-  ))
 
-  const SortableContainer = sortableContainer(({children}) => {
-    return <div className="tasks-container">{children}</div>
-  })
+  let tasks = []
 
-  const tasks = todoList.map((task, index) =>
-    finish
+  if (finish && todoList.length) {
+    tasks = todoList.map((task, index) =>
+    task.finish
     ? (<CSSTransition
         key={task.id}
         classNames='todo-item'
@@ -53,16 +48,24 @@ const TodoList = ({
       >
         <FinishItem value={task} key={task.id}/>
       </CSSTransition>)
-    : (<CSSTransition
+    : null
+    )
+  } else if (!finish && todoList.length){
+    tasks = todoList.map((task, index) =>
+    !task.finish
+    ? (<CSSTransition
         key={task.id}
         classNames='todo-item'
         timeout={{enter: 300, exit: 400}}
         mountOnEnter
         unmountOnExit
       >
-        <SortableItem value={task} index={index}/>
+        {/* <SortableItem value={task} index={index}/> */}
+        <TaskItem value={task} key={task.id}/>
       </CSSTransition>)
-  )
+    : null
+    )
+  }
 
   const noTask = (
     <>
@@ -91,24 +94,23 @@ const TodoList = ({
   )
 
   const onEditHandler = id => {
-    const newTodo = todoList.map((e, i) => {
+    const newTodo = todoList.map(e => {
       if (e.id === id) {
-        return todoList[i] = {...e, edit: true}
-      } else {
-        return  todoList[i] = {...e}
+        e.edit = true
       }
+      return e
     })
     toggleEditForm(newTodo)
   }
 
   const onSuccessHandler = id => {
     const task = todoList.filter(task => task.id === id)
-    addFinishTodo(task[0])
+    addFinishTodo(task[0], todoList)
   }
 
   const onReturnFinishTodo = id => {
     const task = todoList.filter(task => task.id === id)
-    returnFinishTodo(task[0])
+    returnFinishTodo(task[0], todoList)
   }
 
   const onSortEnd = ({oldIndex, newIndex}) => {
@@ -154,11 +156,9 @@ const TodoList = ({
             {noTask}
             {todoList.length
               ? (
-                <SortableContainer onSortEnd={onSortEnd}>
-                  <TransitionGroup>
-                    {tasks}
-                  </TransitionGroup>
-                </SortableContainer>
+                <TransitionGroup>
+                  {tasks}
+                </TransitionGroup>
               )
               : null
             }
@@ -172,11 +172,12 @@ const mapStateToProps = state => ({
   loading: state.app.loading,
   visibleFinishList: state.todo.visibleFinishList,
   noTasks: state.todo.noTasks,
-  noFinishTask: state.todo.noFinishTask
+  noFinishTask: state.todo.noFinishTask,
+  todoList: state.todo.todoList,
 })
 
 const mapDispatchToProps = {
-  removeTodo, toggleEditForm, addFinishTodo, removeFinishTodo,
+  removeTodo, toggleEditForm, addFinishTodo,
   returnFinishTodo, updateTodo, showFinishList, hideFinishList, emptyFinishTodo, emptyTodo
 }
 

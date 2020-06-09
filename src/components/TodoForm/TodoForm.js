@@ -26,7 +26,6 @@ const TodoForm = ({addTodo, showAlert, alert}) => {
     addTodo(newTodo)
     setTitle('')
     setText('')
-    console.log(titleInput)
   }
 
   return (
