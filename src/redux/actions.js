@@ -5,7 +5,7 @@ import { SmileOutlined } from '@ant-design/icons';
 import { SHOW_LOADER_TODO_LIST, HIDE_LOADER_TODO_LIST,
   SHOW_LOADER_FINISH_LIST, HIDE_LOADER_FINISH_LIST,
   SHOW_ALERT, HIDE_ALERT,
-  ADD_TODO, REMOVE_TODO, FETCH_TODO, UPDATE_TODO, NO_TODO, NO_FINISH_TODO, SHOW_ALL_FINISH_LIST_TODO, HIDE_ALL_FINISH_LIST_TODO} from "./types";
+  ADD_TODO, REMOVE_TODO, FETCH_TODO, NO_TODO, NO_FINISH_TODO, SHOW_ALL_FINISH_LIST_TODO, HIDE_ALL_FINISH_LIST_TODO} from "./types";
 
 const url = process.env.REACT_APP_DB_URL
 
@@ -30,32 +30,22 @@ export function showFinishList() {
 
 export function hideFinishList() {
   return dispatch => {
-    dispatch({
-      type: HIDE_ALL_FINISH_LIST_TODO
-    })
+    dispatch({ type: HIDE_ALL_FINISH_LIST_TODO })
   }
 }
 
 export function showAlert(text, type = 'warning') {
   return dispatch => {
-    dispatch({
-      type: SHOW_ALERT,
-      payload: {text, type}
-    })
+    dispatch({ type: SHOW_ALERT, payload: {text, type} })
   }
 }
 
 export function hideAlert() {
-  return {
-    type: HIDE_ALERT
-  }
+  return { type: HIDE_ALERT }
 }
 
-export function toggleEditForm(form) {
-  return {
-    type: UPDATE_TODO,
-    payload: form
-  }
+export function toggleEditForm(payload) {
+  return { type: FETCH_TODO, payload }
 }
 
 export function updateTodo(payload) {
@@ -66,6 +56,7 @@ export function updateTodo(payload) {
 export function fetchTodo() {
   return async dispatch => {
     dispatch(showLoader(SHOW_LOADER_TODO_LIST))
+    dispatch(showLoader(SHOW_LOADER_FINISH_LIST))
     try {
       const res = await axios.get(`${url}/todo.json`)
       if (res.data) {
@@ -78,11 +69,13 @@ export function fetchTodo() {
         setTimeout (() => {
           dispatch({type: FETCH_TODO, payload})
           dispatch(hideLoader(HIDE_LOADER_TODO_LIST))
+          dispatch(hideLoader(HIDE_LOADER_FINISH_LIST))
           dispatch(emptyTodo(false))
         }, 100)
       } else {
         dispatch({type: FETCH_TODO, payload: []})
         dispatch(hideLoader(HIDE_LOADER_TODO_LIST))
+        dispatch(hideLoader(HIDE_LOADER_FINISH_LIST))
         dispatch(emptyTodo(true))
       }
     } catch (e) {

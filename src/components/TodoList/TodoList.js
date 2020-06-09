@@ -6,12 +6,12 @@ import { Button, Tooltip, Drawer } from 'antd';
 import { EyeOutlined } from '@ant-design/icons';
 import ToDoItem from '../TodoItem/ToDoItem'
 import {removeTodo, toggleEditForm, addFinishTodo, emptyFinishTodo, emptyTodo,
-  returnFinishTodo, updateTodo, showFinishList, hideFinishList} from '../../redux/actions'
+  returnFinishTodo, showFinishList, hideFinishList} from '../../redux/actions'
 import './todoList.sass'
 
 const TodoList = ({
       todoList, finish, visibleFinishList, noTasks, noFinishTask,
-      removeTodo, toggleEditForm, addFinishTodo, returnFinishTodo, updateTodo, showFinishList, hideFinishList
+      removeTodo, toggleEditForm, addFinishTodo, returnFinishTodo, showFinishList, hideFinishList
   }) => {
 
   const TaskItem = ({value}) => {
@@ -60,7 +60,6 @@ const TodoList = ({
         mountOnEnter
         unmountOnExit
       >
-        {/* <SortableItem value={task} index={index}/> */}
         <TaskItem value={task} key={task.id}/>
       </CSSTransition>)
     : null
@@ -111,12 +110,6 @@ const TodoList = ({
   const onReturnFinishTodo = id => {
     const task = todoList.filter(task => task.id === id)
     returnFinishTodo(task[0], todoList)
-  }
-
-  const onSortEnd = ({oldIndex, newIndex}) => {
-    const newList = arrayMove(todoList, oldIndex, newIndex)
-    localStorage.setItem('userSortedList', JSON.stringify(newList))
-    updateTodo(newList)
   }
 
   if (finish && !todoList.length) {
@@ -178,7 +171,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   removeTodo, toggleEditForm, addFinishTodo,
-  returnFinishTodo, updateTodo, showFinishList, hideFinishList, emptyFinishTodo, emptyTodo
+  returnFinishTodo, showFinishList, hideFinishList, emptyFinishTodo, emptyTodo
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TodoList)
