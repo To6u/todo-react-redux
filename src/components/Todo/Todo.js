@@ -1,7 +1,7 @@
 import React, {useEffect}  from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import {CSSTransition} from 'react-transition-group'
-import {Spin} from 'antd'
+import Loader from '../Loader'
 import TodoList from '../TodoList/TodoList';
 import TodoForm from '../TodoForm/TodoForm';
 import {fetchTodo} from '../../redux/actions'
@@ -29,43 +29,21 @@ const Todo = () => {
           <TodoForm />
           <div className="pt-4">
             <div className="d-lg-block mt-5 d-none todo-finish-list">
-              <CSSTransition
-                in={loadingFinishList}
-                timeout={500}
-                classNames="loading-list"
-                unmountOnExit
-                mountOnEnter
-              >
-                <div className="loader"><Spin/></div>
-              </CSSTransition>
+              <Loader loading={loadingFinishList}/>
               <h3 className="font-weight-light">Выполненные задачи</h3>
               <TodoList finish={true}/>
             </div>
           </div>
         </div>
         <div className="col-lg-8 todo-list">
-            <CSSTransition
-              in={loadingTodoList}
-              timeout={500}
-              classNames="loading-list"
-              unmountOnExit
-            >
-              <div className="loader"><Spin/></div>
-            </CSSTransition>
-            <h3 className="mb-4 mt-5 mt-lg-0 font-weight-light tasks-list-header px-0">Список задач
-            {/* <FilterTask/> */}
-            </h3>
-            <TodoList/>
+          <Loader loading={loadingTodoList}/>
+          <h3 className="mb-4 mt-5 mt-lg-0 font-weight-light tasks-list-header px-0">Список задач
+          {/* <FilterTask/> */}
+          </h3>
+          <TodoList/>
         </div>
         <div className="col-lg-4 d-lg-none todo-finish-list">
-          <CSSTransition
-            in={loadingFinishList}
-            timeout={500}
-            classNames="loading-list"
-            unmountOnExit
-          >
-            <div className="loader"><Spin/></div>
-          </CSSTransition>
+          <Loader loading={loadingFinishList}/>
           <h3 className="mb-4 font-weight-light">Выполненные задачи</h3>
           <TodoList finish={true}/>
         </div>

@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const Input = ({value, name, id, label, onChange}) => {
+export const Input = ({value, name, id, label, onChange, inputRef}) => {
   return (
     <div className="form-group">
       { label
@@ -8,6 +8,7 @@ export const Input = ({value, name, id, label, onChange}) => {
         : null
       }
       <input
+        ref={inputRef}
         type="text"
         className="form-control"
         id={id}

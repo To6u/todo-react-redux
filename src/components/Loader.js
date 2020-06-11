@@ -1,7 +1,15 @@
 import React from 'react'
+import {CSSTransition} from 'react-transition-group'
+import {Spin} from 'antd'
 
-export const Loader = () => (
-  <div className="spinner-grow text-dark position-absolute" role="status">
-    <span className="sr-only">Loading...</span>
-  </div>
+const Loader = ({loading}) => (
+  <CSSTransition
+    in={loading}
+    timeout={500}
+    classNames="loading-list"
+    unmountOnExit
+  >
+    <div className="loader"><Spin/></div>
+  </CSSTransition>
 )
+export default Loader

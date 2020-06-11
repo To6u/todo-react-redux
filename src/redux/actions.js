@@ -5,7 +5,7 @@ import { SmileOutlined } from '@ant-design/icons';
 import { SHOW_LOADER_TODO_LIST, HIDE_LOADER_TODO_LIST,
   SHOW_LOADER_FINISH_LIST, HIDE_LOADER_FINISH_LIST,
   SHOW_ALERT, HIDE_ALERT,
-  ADD_TODO, REMOVE_TODO, FETCH_TODO, NO_TODO, NO_FINISH_TODO, SHOW_ALL_FINISH_LIST_TODO, HIDE_ALL_FINISH_LIST_TODO} from "./types";
+  ADD_TODO, REMOVE_TODO, FETCH_TODO, NO_TODO, NO_FINISH_TODO, SHOW_ALL_FINISH_LIST_TODO, HIDE_ALL_FINISH_LIST_TODO, FINISH_COUNT} from "./types";
 
 const url = process.env.REACT_APP_DB_URL
 
@@ -59,19 +59,23 @@ export function fetchTodo() {
     dispatch(showLoader(SHOW_LOADER_FINISH_LIST))
     try {
       const res = await axios.get(`${url}/todo.json`)
+      let finishCount = 0
       if (res.data) {
         const payload = Object.keys(res.data).map(key => {
+          finishCount = res.data[key].finish ? finishCount + 1 : finishCount + 0
           return {
             ...res.data[key],
             id: key
           }
         })
-        setTimeout (() => {
-          dispatch({type: FETCH_TODO, payload})
-          dispatch(hideLoader(HIDE_LOADER_TODO_LIST))
-          dispatch(hideLoader(HIDE_LOADER_FINISH_LIST))
-          dispatch(emptyTodo(false))
-        }, 100)
+        dispatch({type: FETCH_TODO, payload})
+        dispatch({type: FINISH_COUNT, payload: finishCount})
+        if (!finishCount) {
+          dispatch(emptyFinishTodo(true))
+        }
+        dispatch(hideLoader(HIDE_LOADER_TODO_LIST))
+        dispatch(hideLoader(HIDE_LOADER_FINISH_LIST))
+        dispatch(emptyTodo(false))
       } else {
         dispatch({type: FETCH_TODO, payload: []})
         dispatch(hideLoader(HIDE_LOADER_TODO_LIST))
@@ -121,11 +125,15 @@ export function removeTodo(id) {
   }
 }
 
-export function editTodo(todo) {
+export function editTodo(todo, list) {
   return async dispatch => {
     try {
       await axios.put(`${url}/todo/${todo.id}.json`, todo)
-      dispatch(fetchTodo())
+      const newList = list.map(e => {
+        if (e.id === todo.id) e = todo
+        return e
+      })
+      dispatch(updateTodo(newList))
       notification['success']({message: 'Задача изменена'})
     } catch(e) {
       throw new Error('EditTodo: ' + e.message)
@@ -146,6 +154,7 @@ export function addFinishTodo(todo, list) {
         return e
       })
       dispatch(updateTodo(newList))
+      dispatch({type: FINISH_COUNT, payload: 1})
       dispatch(showLoader(HIDE_LOADER_FINISH_LIST))
       notification.open({message: "Поздравляю! Задача завершена", icon: <SmileOutlined style={{ color: '#30B60B' }}/>})
     } catch(e) {
@@ -164,6 +173,7 @@ export function returnFinishTodo(todo, list) {
         if (e.id === payload.id) e.finish = false
         return e
       })
+      dispatch({type: FINISH_COUNT, payload: -1})
       dispatch(updateTodo(newList))
       dispatch(showLoader(HIDE_LOADER_TODO_LIST))
       notification['success']({message: 'Вы вернули задачу'})

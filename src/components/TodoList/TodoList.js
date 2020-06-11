@@ -10,7 +10,7 @@ import {removeTodo, toggleEditForm, addFinishTodo, emptyFinishTodo, emptyTodo,
 import './todoList.sass'
 
 const TodoList = ({
-      todoList, finish, visibleFinishList, noTasks, noFinishTask,
+      todoList, finish, visibleFinishList, noTasks, noFinishTasks, finishCount,
       removeTodo, toggleEditForm, addFinishTodo, returnFinishTodo, showFinishList, hideFinishList
   }) => {
 
@@ -39,7 +39,7 @@ const TodoList = ({
   let tasks = []
 
   if (finish && todoList.length) {
-    tasks = todoList.map((task, index) =>
+    tasks = todoList.map(task =>
     task.finish
     ? (<CSSTransition
         key={task.id}
@@ -51,7 +51,7 @@ const TodoList = ({
     : null
     )
   } else if (!finish && todoList.length){
-    tasks = todoList.map((task, index) =>
+    tasks = todoList.map(task =>
     !task.finish
     ? (<CSSTransition
         key={task.id}
@@ -66,7 +66,7 @@ const TodoList = ({
     )
   }
 
-  const noTask = (
+  const NoTask = () => (
     <>
       {!finish
         ? (<CSSTransition
@@ -77,7 +77,7 @@ const TodoList = ({
             <p className='no-task text-left font-weight-light mb-1'>Любую задачу реально выполнить, если разбить ее на выполнимые части.</p>
           </CSSTransition>)
         : (<CSSTransition
-            in={noFinishTask}
+            in={noFinishTasks}
             timeout={{enter: 300, exit: 400}}
             classNames='no-task'
           >
@@ -118,15 +118,23 @@ const TodoList = ({
     emptyTodo(true)
   }
 
+  const buttonShowFinishList = () => {
+    return finishCount > 2
+    ? (
+      <Tooltip title="Все выполненные задачи" placeholder="right">
+        <Button className="show-finish-list d-lg-block d-none" shape="circle" icon={<EyeOutlined />} onClick={() => showFinishList()} />
+      </Tooltip>
+    )
+    : null
+  }
+
 
   return (
     <React.Fragment>
       {finish
         ? (<>
-            {noTask}
-            <Tooltip title="Все выполненные задачи" placeholder="right">
-              <Button className="show-finish-list d-lg-block d-none" shape="circle" icon={<EyeOutlined />} onClick={() => showFinishList()} />
-            </Tooltip>
+            {noFinishTasks && <NoTask/>}
+            {buttonShowFinishList()}
             <TransitionGroup>
               {tasks}
             </TransitionGroup>
@@ -146,7 +154,7 @@ const TodoList = ({
             </Drawer>
           </>)
         : (<>
-            {noTask}
+            <NoTask/>
             {todoList.length
               ? (
                 <TransitionGroup>
@@ -165,8 +173,9 @@ const mapStateToProps = state => ({
   loading: state.app.loading,
   visibleFinishList: state.todo.visibleFinishList,
   noTasks: state.todo.noTasks,
-  noFinishTask: state.todo.noFinishTask,
+  noFinishTasks: state.todo.noFinishTask,
   todoList: state.todo.todoList,
+  finishCount: state.todo.finishCount
 })
 
 const mapDispatchToProps = {
