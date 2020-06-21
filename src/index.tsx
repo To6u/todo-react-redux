@@ -7,7 +7,6 @@ import { composeWithDevTools } from 'redux-devtools-extension/logOnlyInProductio
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { rootReducer } from './redux/rootReducer';
-import { forbidenWordsMiddleware } from './redux/middleware'
 import './index.sass'
 
 const composeEnhancers = composeWithDevTools({
@@ -16,7 +15,7 @@ const composeEnhancers = composeWithDevTools({
 
 const store = createStore(rootReducer, composeEnhancers(
   applyMiddleware(
-    thunk, forbidenWordsMiddleware
+    thunk
   ),
 ))
 

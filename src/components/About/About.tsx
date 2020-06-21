@@ -1,7 +1,7 @@
 import React from 'react'
 import './about.sass'
 
-const About = () => {
+const About: React.FC = () => {
   return (
     <div className="container">
       <h2 className="my-5">Немного информации о тудушке</h2>

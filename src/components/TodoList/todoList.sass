@@ -13,6 +13,9 @@
     &::-webkit-scrollbar
       width: 0
 
+.list-item-drag
+  background: #ccc
+
 .todo-finish-list
   margin-top: 40px
 
@@ -88,9 +91,11 @@
   opacity: 0
 
 .no-task-exit-active
+  opacity: 0
   animation: no-task .3s ease forwards
 
 .no-task-enter-active
+  opacity: 1
   animation: no-task .3s ease alternate-reverse
 
 @keyframes todo-list

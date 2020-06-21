@@ -1,12 +1,12 @@
 import React from 'react';
-import {useSelector} from 'react-redux'
+import {useTypedSelector} from './redux/rootReducer'
 import {BrowserRouter as Router, Route} from 'react-router-dom'
 import {CSSTransition} from 'react-transition-group'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import TopNavbar from './components/Navbar/Navbar';
 
-const App = () => {
-  const routes = useSelector(state => state.app.routes)
+const App: React.FC = () => {
+  const routes = useTypedSelector(state => state.app.routes)
 
   return (
     <Router>

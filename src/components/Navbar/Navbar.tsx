@@ -1,14 +1,13 @@
 import React from 'react'
-import {useSelector} from 'react-redux'
+import {useTypedSelector} from '../../redux/rootReducer'
 import {NavLink} from 'react-router-dom'
 import {Nav, Navbar, Container} from 'react-bootstrap'
 import Logo from '../Logo/Logo'
 import GitHubLogo from '../github.svg'
 import './navbar.sass'
 
-const TopNavbar = () => {
-
-  const routes = useSelector(state => state.app.routes)
+const TopNavbar: React.FC = () => {
+  const routes = useTypedSelector(state => state.app.routes)
 
   return (
       <Navbar bg="dark" variant="dark">
